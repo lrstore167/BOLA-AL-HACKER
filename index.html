@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediksi & Pengisian Bola</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('https://i.ibb.co/Cp5CtTL6/kilua.gif');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #00bfff;
+            margin-top: 60px;
+        }
+
+        .marquee {
+            text-align: center;
+            font-size: 18px;
+            color: #ffcc00;
+            background-color: #333;
+            padding: 10px;
+            margin: 20px 0;
+        }
+
+        .form-container {
+            text-align: center;
+            margin: 0 auto;
+            padding: 20px;
+            width: 80%;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+        }
+
+        .form-container textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #00bfff;
+            border-radius: 5px;
+            font-size: 16px;
+            min-height: 150px;
+            background-color: #333;
+            color: white;
+        }
+
+        .form-container button,
+        .copy-btn {
+            padding: 10px 20px;
+            background-color: #00bfff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .form-container button:hover,
+        .copy-btn:hover {
+            background-color: #008fb3;
+        }
+
+        .output {
+            margin-top: 30px;
+            text-align: center;
+            color: #00bfff;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #00bfff;
+            color: #fff;
+        }
+
+        th {
+            background-color: #00bfff;
+        }
+
+        td {
+            background-color: #222;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background-color: white;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: fall 5s infinite linear;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        .liga {
+            font-weight: bold;
+            font-size: 26px;
+            text-transform: uppercase;
+            margin-top: 20px;
+            padding: 10px 0;
+            border-bottom: 2px solid #00bfff;
+        }
+
+        .pertandingan {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 18px;
+            color: #fff;
+            margin-top: 10px;
+        }
+
+        .pertandingan div {
+            background: #222;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+            width: 50%;
+            text-align: center;
+        }
+
+        /* Menu Kiri */
+        .menu-left {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Tombol Menu Kiri -->
+    <div class="menu-left">
+        <button class="copy-btn" onclick="showSection('prediksi')">PREDIKSI BOLA</button>
+        <button class="copy-btn" onclick="showSection('pengisian')">PENGISIAN TEKS BOLA</button>
+    </div>
+
+    <!-- Salju -->
+    <div class="snow-container" id="snow-container"></div>
+
+    <!-- PREDIKSI BOLA SECTION -->
+    <div id="prediksiSection">
+        <h1>Prediksi Bola Hari Ini</h1>
+        <div class="marquee">
+            <p>PREDIKSI BOLA TERUPDATE! Daftar di ANGKABET dan nikmati pengalaman taruhan yang seru dengan peluang besar!</p>
+        </div>
+        <div class="form-container">
+            <textarea id="inputData" placeholder="Masukkan prediksi bola..."></textarea><br>
+            <button onclick="generateTable()">Generate Tabel</button>
+            <button onclick="showHtmlCode()">Tampilkan HTML Tabel</button>
+            <button onclick="copyHtmlCode()">Copy HTML Tabel</button>
+        </div>
+        <div id="outputTable" class="output"></div>
+        <pre id="htmlCode" style="display:none; background:#333; color:#fff; padding:10px;"></pre>
+    </div>
+
+    <!-- PENGISIAN TEKS BOLA SECTION -->
+    <div id="pengisianSection" style="display:none;">
+        <h2>Pengisian Jadwal Pertandingan Sepak Bola</h2>
+        <div class="form-container">
+            <label for="jadwalInput">Masukkan Jadwal Pertandingan:</label>
+            <textarea id="jadwalInput" placeholder="Masukkan jadwal pertandingan (pisahkan liga dan pertandingan dengan baris kosong)"></textarea>
+            <button onclick="prosesInput()">Proses Jadwal</button>
+        </div>
+        <button class="copy-btn" onclick="copyToClipboard()">Salin Hasil</button>
+        <div id="output" class="output"></div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+        function createSnowflakes() {
+            const snowContainer = document.getElementById("snow-container");
+            for (let i = 0; i < 100; i++) {
+                const snowflake = document.createElement("div");
+                snowflake.className = "snowflake";
+                snowflake.textContent = "❄";
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.fontSize = `${Math.random() * 1.5 + 0.5}em`;
+                snowflake.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                snowflake.style.animationDelay = `${Math.random() * 5}s`;
+                snowContainer.appendChild(snowflake);
+            }
+        }
+
+        function showSection(sectionId) {
+            document.getElementById("prediksiSection").style.display = sectionId === 'prediksi' ? 'block' : 'none';
+            document.getElementById("pengisianSection").style.display = sectionId === 'pengisian' ? 'block' : 'none';
+        }
+
+        function generateTable() {
+            let input = document.getElementById("inputData").value.trim();
+            let lines = input.split("\n").filter(line => line.trim() !== "");
+            let tableHtml = "";
+            let currentLeague = "";
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line.includes("VS") && line.length > 0 && !line.match(/^\d{2}\/\d{2} \d{2}:\d{2} WIB/)) {
+                    if (currentLeague) {
+                        tableHtml += "</tbody></table>";
+                    }
+                    currentLeague = `<tr><th colspan='3' style="background: linear-gradient(45deg, #FF6347, #800000, #2F4F4F); color: #fff;">${line}</th></tr>`;
+                    tableHtml += `<table><tbody><tr style="background: linear-gradient(45deg, #A8FF00, #FFD700, #FFCC00); color: #fff;">${currentLeague}
+                        <tr>
+                            <th>Tanggal & Waktu</th>
+                            <th>Pertandingan</th>
+                            <th>Skor</th>
+                        </tr>`;
+                } else {
+                    let matchPattern = /^(\d{2}\/\d{2} \d{2}[:.]\d{2} WIB)\s+(.+?)\s+[vV][sS]\s+(.+?)\s+(\d+\s?:\s?\d+)$/;
+                    let match = line.match(matchPattern);
+                    if (match) {
+                        let date = match[1];
+                        let team1 = match[2].trim();
+                        let team2 = match[3].trim();
+                        let score = match[4];
+                        tableHtml += `<tr><td>${date}</td><td>${team1} VS ${team2}</td><td>${score}</td></tr>`;
+                    }
+                }
+            });
+
+            tableHtml += "</tbody></table>";
+            document.getElementById("outputTable").innerHTML = tableHtml;
+        }
+
+        function showHtmlCode() {
+    // Get the current date and format it
+    const currentDate = new Date();
+    const daysOfWeek = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const monthsOfYear = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    
+    const dayOfWeek = daysOfWeek[currentDate.getDay()];
+    const day = currentDate.getDate().toString().padStart(2, '0'); // Ensure two digits
+    const month = monthsOfYear[currentDate.getMonth()];
+    const year = currentDate.getFullYear();
+    
+    const formattedDate = `${dayOfWeek}, ${day} ${month} ${year}`;
+
+    // HTML content for the generated code
+    let tableContent = document.getElementById("outputTable").innerHTML;
+    let styleContent = `
+<style>
+    /* General styling for the table */
+    table {
+        width: 90%;
+        margin: 15px auto;
+        border-collapse: collapse;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        background: linear-gradient(45deg, red, black); /* Gradient red to black */
+        border: 1px solid #333333; /* Subtle black border around the table */
+    }
+    
+    /* Header styles with gradient red to black background */
+    th {
+        background: linear-gradient(45deg, #FF3B30, #000000); /* Gradient from red to black */
+        color: #FFFFFF; /* White text for contrast */
+        text-align: center;
+        padding: 16px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: 1px solid #111111; /* Thin black border around the header cells */
+    }
+
+    /* Data cell styles with gold accents */
+    td {
+        text-align: center;
+        padding: 14px 20px;
+        font-size: 14px;
+        color: #FFB81C; /* Gold text */
+        border: 1px solid #111111; /* Thin black border around each data cell */
+    }
+
+    /* Alternate row colors */
+    tr:nth-child(even) {
+        background-color: #1A1A1A; /* Dark grey */
+    }
+
+    tr:nth-child(odd) {
+        background-color: #2A2A2A; /* Slightly lighter dark grey */
+    }
+    /* Hover effect */
+    tr:hover {
+        background-color: #FFD700; /* Warna emas */
+        color: #000000; /* Hitam */
+        font-weight: bold;
+    }
+
+    /* Marquee style for the scrolling message */
+    .marquee {
+        overflow: hidden;
+        white-space: nowrap;
+        background-color: #222222;
+        color: #FF3B30;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .marquee p {
+        display: inline-block;
+        animation: marquee 55s linear infinite;
+    }
+
+    @keyframes marquee {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+
+    /* Table column specific width */
+    .date-column {
+        width: 20%;
+    }
+
+    .match-column {
+        width: 50%;
+    }
+
+    .score-column {
+        width: 30%;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        table {
+            width: 95%;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            font-size: 12px;
+        }
+
+        .marquee p {
+            font-size: 16px;
+        }
+    }
+</style>`;
+
+    let marqueeText = `<div class="marquee"><p>PREDIKSI BOLA TERUPDATE ! Tunggu apa lagi? Daftar di ANGKABET dan nikmati pengalaman taruhan yang seru dengan peluang besar!</p></div>`;
+
+    document.getElementById("htmlCode").style.display = "block";
+    document.getElementById("htmlCode").textContent = `
+<div class="date">${formattedDate}</div>
+${styleContent}
+${marqueeText}
+<table>
+    ${tableContent}
+</table>`;
+}
+
+        function copyHtmlCode() {
+            let htmlContent = document.getElementById("htmlCode").textContent;
+            navigator.clipboard.writeText(htmlContent);
+            alert("HTML Tabel telah disalin!");
+        }
+
+        function prosesInput() {
+            var input = document.getElementById('jadwalInput').value.trim();
+            if (input === "") {
+                alert("Harap lengkapi kolom input!");
+                return;
+            }
+            var ligaArray = input.split(/\n{2,}/);
+            var outputHTML = '';
+            ligaArray.forEach(function(ligaText) {
+                var lines = ligaText.trim().split('\n');
+                var namaLiga = lines[0].trim();
+                var jadwal = lines.slice(1);
+                outputHTML += `<div class="liga">${namaLiga}</div><div class="pertandingan">`;
+                jadwal.forEach(match => {
+                    match = match.replace(/\bvs\b/gi, 'VS');
+                    match = match.replace(/(\d+)\s*-\s*(\d+)/g, '$1 : $2');
+                    outputHTML += `<div>${match}</div>`;
+                });
+                outputHTML += `</div><br>`;
+            });
+            document.getElementById('output').innerHTML = outputHTML;
+            document.getElementById('jadwalInput').value = '';
+        }
+
+        function copyToClipboard() {
+            var result = document.getElementById('output').innerText;
+            if (result) {
+                var textarea = document.createElement('textarea');
+                textarea.value = result;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert("Hasil berhasil disalin!");
+            } else {
+                alert("Tidak ada hasil untuk disalin.");
+            }
+        }
+
+        // Inisialisasi efek salju
+        createSnowflakes();
+    </script>
+</body>
+</html>
