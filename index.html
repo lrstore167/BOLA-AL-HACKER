@@ -3,42 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediksi & Pengisian Bola</title>
+    <title>Dashboard Utama</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* Menggunakan font Poppins untuk desain modern */
         body {
-            font-family: 'Arial', sans-serif;
-            background-image: url('https://i.ibb.co/Cp5CtTL6/kilua.gif');
-            background-size: cover;
-            background-position: center;
-            color: #fff;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
-            position: relative;
+            background-color: #f4f7fb;
+            color: #333;
         }
 
-        h1, h2 {
-            text-align: center;
-            color: #00bfff;
-            margin-top: 60px;
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #2C3E50;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 30px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
-        .marquee {
-            text-align: center;
+        .sidebar .logo h2 {
+            color: #fff;
+            margin-bottom: 40px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar nav ul li {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .menu-item {
+            color: #fff;
+            text-decoration: none;
             font-size: 18px;
-            color: #ffcc00;
-            background-color: #333;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
             padding: 10px;
-            margin: 20px 0;
         }
 
-        .form-container {
-            text-align: center;
-            margin: 0 auto;
+        .sidebar .menu-item:hover {
+            color: #FFD700; /* Warna kuning emas saat hover */
+        }
+
+        .sidebar .menu-item i {
+            margin-right: 10px;
+        }
+
+        /* Content Area */
+        .content {
+            margin-left: 250px;
+            padding: 40px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .section {
+            background-color: #fff;
             padding: 20px;
-            width: 80%;
-            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 28px;
+            color: #2C3E50;
+            margin-bottom: 20px;
+        }
+
+        .section p {
+            font-size: 16px;
+            color: #7F8C8D;
+        }
+
+        /* Efek Hover untuk Tombol */
+        .menu-item:hover {
+            background-color: #34495E;
+            border-radius: 5px;
+            padding-left: 20px;
+        }
+
+        /* Responsif untuk tampilan kecil */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .content {
+                margin-left: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 10px;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+        }
+
+        /* Styling for the prediction form */
+        .form-container {
+            margin: 0 auto;
+            text-align: center;
+            width: 60%;
+            padding: 20px;
+            background-color: rgba(28, 28, 28, 0.8);
             border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         .form-container textarea {
@@ -53,8 +146,7 @@
             color: white;
         }
 
-        .form-container button,
-        .copy-btn {
+        .form-container button {
             padding: 10px 20px;
             background-color: #00bfff;
             color: white;
@@ -65,8 +157,7 @@
             margin-top: 10px;
         }
 
-        .form-container button:hover,
-        .copy-btn:hover {
+        .form-container button:hover {
             background-color: #008fb3;
         }
 
@@ -74,49 +165,12 @@
             margin-top: 30px;
             text-align: center;
             color: #00bfff;
+            max-height: 400px;
+            overflow-y: auto;
             padding: 15px;
             background-color: rgba(0, 0, 0, 0.6);
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #00bfff;
-            color: #fff;
-        }
-
-        th {
-            background-color: #00bfff;
-        }
-
-        td {
-            background-color: #222;
-        }
-
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            background-color: white;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            animation: fall 5s infinite linear;
-            opacity: 0.8;
-        }
-
-        @keyframes fall {
-            0% { transform: translateY(-100px) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
         }
 
         .liga {
@@ -146,31 +200,66 @@
             text-align: center;
         }
 
-        /* Menu Kiri */
-        .menu-left {
-            position: fixed;
-            top: 100px;
-            left: 20px;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .copy-btn {
+            padding: 10px 20px;
+            background-color: #00bfff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
         }
 
+        .copy-btn:hover {
+            background-color: #008fb3;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background-color: white;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: fall 5s infinite linear;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <!-- Tombol Menu Kiri -->
-    <div class="menu-left">
-        <button class="copy-btn" onclick="showSection('prediksi')">PREDIKSI BOLA</button>
-        <button class="copy-btn" onclick="showSection('pengisian')">PENGISIAN TEKS BOLA</button>
+    <!-- Sidebar Menu -->
+    <div class="sidebar">
+        <div class="logo">
+            <h2>Dashboard</h2>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="menu-item" onclick="showSection('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" class="menu-item" onclick="showSection('prediksiBola')"><i class="fas fa-futbol"></i> Prediksi Bola</a></li>
+                <li><a href="#" class="menu-item" onclick="showSection('pengisianTeks')"><i class="fas fa-edit"></i> Pengisian Teks Bola</a></li><li><a href="#" class="menu-item" onclick="showSection('ambilPrediksi')"><i class="fas fa-globe"></i> Ambil Prediksi Bola</a></li>
+            </ul>
+        </nav>
     </div>
 
-    <!-- Salju -->
-    <div class="snow-container" id="snow-container"></div>
+    <!-- Content Area -->
+    <div class="content">
+        <!-- Bagian Dashboard Utama -->
+        <section id="dashboard" class="section">
+            <h2>Selamat Datang di Dashboard AL_HACKER</h2>
+            <p>Ini adalah halaman utama dashboard dengan beberapa menu untuk mengakses berbagai bagian.</p>
+        </section>
 
-    <!-- PREDIKSI BOLA SECTION -->
-    <div id="prediksiSection">
+        <!-- Bagian Prediksi Bola -->
+        <section id="prediksiBola" class="section" style="display:none;">
+            <h2>Prediksi Bola</h2>
+            <p>Ini adalah halaman prediksi bola.</p>
+            <div id="prediksiSection">
         <h1>Prediksi Bola Hari Ini</h1>
         <div class="marquee">
             <p>PREDIKSI BOLA TERUPDATE! Daftar di ANGKABET dan nikmati pengalaman taruhan yang seru dengan peluang besar!</p>
@@ -185,17 +274,6 @@
         <pre id="htmlCode" style="display:none; background:#333; color:#fff; padding:10px;"></pre>
     </div>
 
-    <!-- PENGISIAN TEKS BOLA SECTION -->
-    <div id="pengisianSection" style="display:none;">
-        <h2>Pengisian Jadwal Pertandingan Sepak Bola</h2>
-        <div class="form-container">
-            <label for="jadwalInput">Masukkan Jadwal Pertandingan:</label>
-            <textarea id="jadwalInput" placeholder="Masukkan jadwal pertandingan (pisahkan liga dan pertandingan dengan baris kosong)"></textarea>
-            <button onclick="prosesInput()">Proses Jadwal</button>
-        </div>
-        <button class="copy-btn" onclick="copyToClipboard()">Salin Hasil</button>
-        <div id="output" class="output"></div>
-    </div>
 
     <!-- SCRIPT -->
     <script>
@@ -213,10 +291,6 @@
             }
         }
 
-        function showSection(sectionId) {
-            document.getElementById("prediksiSection").style.display = sectionId === 'prediksi' ? 'block' : 'none';
-            document.getElementById("pengisianSection").style.display = sectionId === 'pengisian' ? 'block' : 'none';
-        }
 
         function generateTable() {
             let input = document.getElementById("inputData").value.trim();
@@ -429,6 +503,73 @@ ${marqueeText}
 
         // Inisialisasi efek salju
         createSnowflakes();
+    </script>
+        </section>
+
+        <!-- Bagian Pengisian Teks Bola (di sini) -->
+        <section id="pengisianTeks" class="section" style="display:none;">
+            <h2>Pengisian Jadwal Pertandingan Sepak Bola</h2>
+            <div class="form-container">
+                <label for="jadwalInput">Masukkan Jadwal Pertandingan:</label>
+                <textarea id="jadwalInput" placeholder="Masukkan jadwal pertandingan (pisahkan liga dan pertandingan dengan baris kosong)"></textarea>
+                <button onclick="prosesInput()">Proses Jadwal</button>
+            </div>
+            <button class="copy-btn" onclick="copyToClipboard()">Salin Hasil</button>
+            <div id="output" class="output"></div>
+        </section>
+    </div>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script>
+        function showSection(sectionId) {
+            var sections = document.querySelectorAll('.section');
+            sections.forEach(function(section) {
+                section.style.display = 'none';
+            });
+
+            var selectedSection = document.getElementById(sectionId);
+            selectedSection.style.display = 'block';
+        }
+
+        showSection('dashboard');
+
+        // Pengisian Jadwal Pertandingan Script
+        function prosesInput() {
+            var input = document.getElementById('jadwalInput').value.trim();
+            if (input === "") {
+                alert("Harap lengkapi kolom input!");
+                return;
+            }
+            var ligaArray = input.split(/\n{2,}/);
+            var outputHTML = '';
+            ligaArray.forEach(function(ligaText) {
+                var lines = ligaText.trim().split('\n');
+                var namaLiga = lines[0].trim();
+                var jadwal = lines.slice(1);
+                outputHTML += `<div class="liga">${namaLiga}</div><div class="pertandingan">`;
+                jadwal.forEach(match => {
+                    match = match.replace(/\bvs\b/g, 'VS');
+                    match = match.replace(/(\d+)\s*-\s*(\d+)/g, '$1 : $2');
+                    outputHTML += `<div>${match}</div>`;
+                });
+                outputHTML += `</div><br>`;
+            });
+            document.getElementById('output').innerHTML = outputHTML;
+            document.getElementById('jadwalInput').value = '';
+        }
+
+        function copyToClipboard() {
+            var result = document.getElementById('output').innerText;
+            if (result) {
+                var textarea = document.createElement('textarea');
+                textarea.value = result;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Hasil telah disalin ke clipboard!');
+            }
+        }
     </script>
 </body>
 </html>
